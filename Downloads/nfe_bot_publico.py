@@ -58,7 +58,7 @@ reiniciar_log()
 mensagens_alerta = []
 
 # Indexação única
-print("🔍 Indexando arquivos XML e PDF...")
+print(" Indexando arquivos XML e PDF...")
 index_xml = indexar_arquivos(pasta_xml, ".xml")
 index_pdf = indexar_arquivos(pasta_danfes, ".pdf")
 
@@ -66,17 +66,17 @@ arquivos_excel = [os.path.join(pasta_excel, a) for a in os.listdir(pasta_excel)
                   if a.endswith(('.xls', '.xlsx')) and not a.startswith('~$')]
 
 for arquivo in arquivos_excel:
-    print(f"📄 Processando: {arquivo}")
+    print(f"Processando: {arquivo}")
     try:
         linha_cabecalho = encontrar_linha_cabecalho(arquivo)
         if linha_cabecalho is None:
-            print("❌ Cabeçalho não encontrado.")
+            print(" Cabeçalho não encontrado.")
             continue
 
         df = pd.read_excel(arquivo, engine="openpyxl", header=linha_cabecalho)
         coluna_chave = next((c for c in df.columns if "chave de acesso" in str(c).lower()), None)
         if not coluna_chave:
-            print("❌ Coluna 'Chave de acesso' não encontrada.")
+            print(" Coluna 'Chave de acesso' não encontrada.")
             continue
 
         chaves = df[coluna_chave].dropna().astype(str).str.strip()
@@ -93,14 +93,14 @@ for arquivo in arquivos_excel:
 
         errors_found = False
 
-        for chave in tqdm(chaves_validas, desc="📦 Copiando arquivos"):
+        for chave in tqdm(chaves_validas, desc=" Copiando arquivos"):
             if chave.lower() == "escaneado" or chave == "":
                 continue
 
             # Copiar XML
             if chave in index_xml:
                 shutil.copy(index_xml[chave], pasta_resultado)
-                print(f"✅ {chave}.xml copiado.")
+                print(f" {chave}.xml copiado.")
             else:
                 mensagens_alerta.append(f"{chave} - XML não encontrado")
                 with open(arquivo_txt, "a", encoding="utf-8") as f:
@@ -110,7 +110,7 @@ for arquivo in arquivos_excel:
             # Copiar PDF
             if chave in index_pdf:
                 shutil.copy(index_pdf[chave], pasta_resultado_pdf)
-                print(f"✅ {chave}.pdf copiado.")
+                print(f" {chave}.pdf copiado.")
             else:
                 mensagens_alerta.append(f"{chave} - PDF não encontrado")
                 with open(arquivo_txt, "a", encoding="utf-8") as f:
@@ -119,9 +119,9 @@ for arquivo in arquivos_excel:
 
         if not errors_found:
             os.remove(arquivo)
-            print(f"🗑️ {arquivo} removido após processamento.")
+            print(f" {arquivo} removido após processamento.")
         else:
-            print(f"⚠️ {arquivo} NÃO foi removido devido a erros.")
+            print(f" {arquivo} NÃO foi removido devido a erros.")
 
     except Exception as e:
         print(f"Erro ao processar {arquivo}: {e}")
@@ -131,4 +131,4 @@ if mensagens_alerta:
 else:
     if os.path.exists(arquivo_txt):
         os.remove(arquivo_txt)
-    print("✅ Tudo processado sem erros.")
+    print(" Tudo processado sem erros.")
