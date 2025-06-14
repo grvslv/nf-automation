@@ -5,7 +5,11 @@ Este repositório contém um script Python que automatiza o processamento de pla
 ## Instalação
 
 1. Certifique-se de ter o Python 3 instalado no Windows.
-2. Instale as dependências necessárias:
+2. Instale as dependências necessárias (pandas, openpyxl, tqdm). Uma forma simples é:
+   ```cmd
+   pip install -r requirements.txt
+   ```
+   Se preferir, você também pode executar:
    ```cmd
    pip install pandas openpyxl tqdm
    ```
